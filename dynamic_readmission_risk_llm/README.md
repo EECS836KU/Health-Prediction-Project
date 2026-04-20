@@ -76,7 +76,7 @@ python src/train.py --use_llm True --pos_weight 3.0
 
 # Train baseline (no notes)
 python src/train.py --use_llm False --pos_weight 3.0
-
+```
 
 ## Citations & Acknowledgements
 
