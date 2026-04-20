@@ -36,7 +36,7 @@ Model performs three main functions:
 - Clinical notes provide both predictive signal and a regularising effect.
 
 ## Repository Structure
-
+```
 dynamic_readmission_risk_llm/
 ├── .gitignore
 ├── README.md
@@ -47,7 +47,7 @@ dynamic_readmission_risk_llm/
 ├── notebooks/                 
 ├── results/                  
 └── config/                    
-
+```
 
 ## Getting Started
 
