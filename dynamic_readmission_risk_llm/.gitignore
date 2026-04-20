@@ -1,0 +1,59 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+venv/
+env/
+ENV/
+.venv
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Jupyter Notebook
+.ipynb_checkpoints/
+*.ipynb
+
+# Data files (MIMIC-III is sensitive and large)
+*.csv
+*.parquet
+*.h5
+*.pkl
+data/
+*.db
+
+# Model checkpoints and logs
+*.pth
+*.pt
+*.bin
+*.log
+logs/
+runs/
+
+# Configuration with secrets
+.env
+config.local.yaml
+
+# OS generated files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# PyHealth / Hugging Face cache
+.pyhealth_cache/
+.cache/
+hf_cache/
+
+# Output results (optional – can share aggregated results, but not raw)
+results/*.csv
+!results/summary.md
+
+# Deep learning frameworks
+*.onnx
+*.tflite
