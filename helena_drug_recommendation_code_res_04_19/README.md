@@ -4,9 +4,9 @@
 This project, part of the **Health Prediction Project**, focuses on predicting the set of medications administered/prescribed in that current admission using the **MIMIC-III** database (2001–2012) from PhysioNet. A based line model based on a vanilla Transformer is compared again using instead a RETAIN (reverse-time attention) architecture.
 
 ## Hypothesis
-> **Clinical notes contain hidden risk signals that structured codes alone miss.**
+> **An architecture that explicitly separates temporal relevance (visits) from feature importance (medical codes) will outperform a standard self-attention mechanism on sparse, multi-label EHR data.**
 
-To test this, an **ablation study** was conducted: (1)Removing the Time Attention Component/treating all past visits with equal temporal weight (2)Removing the Level Attention Component/remove the distinction between specific diagnosis or procedure codes within visits.
+To test this, two **ablation studoes** were conducted: (1)Removing the Time Attention Component/treating all past visits with equal temporal weight (2)Removing the Level Attention Component/remove the distinction between specific diagnosis or procedure codes within visits.
 
 ## Model Architecture
 
