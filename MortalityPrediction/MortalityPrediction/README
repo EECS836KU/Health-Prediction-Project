@@ -1,0 +1,11 @@
+The model generated (Retain_Transformer.py) uses the predefined pyhealth mortalitypredictionmimic3 task
+for data preparation, and passes through both a RETAIN (dual RNN) layer and a Transformer layer to predict 
+a binary value of mortality based on past data. 
+
+The baseline model (baseline.py) uses the predefined pyhealth pipeline to implement an RNN 
+
+Ablation studies are performed on the custom model, with ablate_retain.py bypassing the retain layer, and 
+ablate_transformer.py bypassing the transformer layer. 
+
+Test dataset results for the best epoch (50 total epochs) of each model are printed in the corresponding .txt file
+

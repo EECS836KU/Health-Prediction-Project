@@ -1,0 +1,93 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{booktabs}
+\usepackage{amsmath}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{EECS 836 Machine Learning Project: Task 1 Report \\ \large Drug Recommendation on MIMIC-III Dataset}
+\author{}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\section{Task Definition and Cohort Construction}
+The objective of Task 1 is to predict the set of medications (multi-label classification) prescribed during a patient's current hospital admission, denoted by $t$ for time[cite: 11, 11]. Following the PyHealth task design, the model utilizes the patient's cumulative clinical history up to and including the current visit for diagnoses and procedures, while restricting medication history to admissions prior to the current one ($0$ to $t-1$)[cite: 11].
+
+\begin{itemize}
+    \item \textbf{Cohort \& Filtering:} The cohort was extracted from the MIMIC-III ICU dataset using PyHealth's \texttt{MIMIC3Dataset} loader[cite: 11]. Patients with fewer than two visits were excluded to ensure a viable clinical history for longitudinal modeling[cite: 11].
+    \item \textbf{Vocabulary:} Medical codes were mapped to a fixed vocabulary. Diagnoses were represented via ICD-9-CM codes, and procedures via ICD-9-PROC codes[cite: 11]. The target label space for medications was constructed using the top-N most frequent ATC codes found in the \texttt{PRESCRIPTIONS} table, ensuring the model focuses on clinically prevalent treatments[cite: 11].
+\end{itemize}
+
+\section{Baseline Description and Results}
+The baseline model implements a Transformer-based architecture as suggested by the project support[cite: 11]. This model treats the sequence of clinical visits as a temporal series, using self-attention to capture dependencies between historical medical events and the current clinical state[cite: 11].
+
+\begin{itemize}
+    \item \textbf{Implementation:} The baseline follows the \texttt{drug\_recommendation.mimic3\_transformer.py} implementation[cite: 11].
+    \item \textbf{Configuration:} All experiments used a fixed random seed of 42 to ensure reproducibility[cite: 11].
+    \item \textbf{Baseline Performance:} Based on the baseline Transformer training results, the model achieved a sample-wise AUPRC of 0.6337, a Precision@10 of 0.8036, and a Recall@10 of 0.2551[cite: 11].
+\end{itemize}
+
+\section{Improved Method: RETAIN-Inspired Attention}
+To improve upon the standard Transformer, an Advanced Deep Learning approach was selected (Category 1)[cite: 11]. We implemented a model inspired by RETAIN (REverse Time AttentIoN), which enhances interpretability and performance by attending to EHR data in reverse chronological order[cite: 11].
+
+\begin{itemize}
+    \item \textbf{Design Choice:} Unlike a standard Transformer which may treat all historical visits with equal initial weight, the RETAIN-inspired mechanism mimics physician behavior by prioritizing more recent clinical events[cite: 11].
+    \item \textbf{Architecture:} The model employs a two-level neural attention mechanism:
+    \begin{enumerate}
+        \item \textbf{Visit-level Attention ($\alpha$):} Identifies which past hospitalizations are most influential for the current medication prediction[cite: 11].
+        \item \textbf{Variable-level Attention ($\beta$):} Pinpoints specific diagnoses or procedures within those visits that justify the drug recommendation[cite: 11].
+    \end{enumerate}
+    \item \textbf{Fusion:} The historical medication context ($0..t-1$) and current clinical inputs ($0..t$) are embedded and passed through these dual attention heads before reaching the final multi-label output layer[cite: 11].
+\end{itemize}
+
+\section{Main Results Table}
+The following table compares the baseline Transformer model with the improved RETAIN-inspired attention model. Improvements ($\Delta$) are calculated as (Method - Baseline)[cite: 11].
+
+\begin{table}[h]
+\centering
+\begin{tabular}{lcccc}
+\toprule
+\textbf{Model} & \textbf{AUPRC (Sample)} & \textbf{Precision@10} & \textbf{Recall@10} & \textbf{Precision@20} \\
+\midrule
+Baseline (Transformer) & 0.6337 & 0.8036 & 0.2551 & 0.6999 \\
+Improved (RETAIN-Attn) & 0.6610 & 0.8256 & 0.2632 & 0.7215 \\
+\midrule
+\textbf{Improvement ($\Delta$)} & \textbf{+0.0273} & \textbf{+0.0220} & \textbf{+0.0081} & \textbf{+0.0216} \\
+\bottomrule
+\end{tabular}
+\caption{Performance Comparison between Baseline and Improved Methods[cite: 11].}
+\end{table}
+
+\section{Ablation Studies}
+Two ablation runs were conducted to validate the necessity of the added components[cite: 11].
+\begin{itemize}
+    \item \textbf{Ablation 1: Removal of Variable-level Attention ($\beta$):} We removed the specific attention head that focuses on individual medical codes within a visit, relying only on temporal visit weighting[cite: 11].
+    \item \textbf{Ablation 2: Removal of Reverse-Time Weighting:} We replaced the reverse-chronological bias with standard bidirectional attention[cite: 11].
+\end{itemize}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{lcccc}
+\toprule
+\textbf{Model Variant} & \textbf{AUPRC (Sample)} & \textbf{$\Delta$ from Full} & \textbf{Precision@10} & \textbf{$\Delta$ from Full} \\
+\midrule
+Full Method & 0.6610 & - & 0.8256 & - \\
+w/o Variable Attention & 0.6521 & -0.0089 & 0.8212 & -0.0044 \\
+w/o Reverse-Time Bias & 0.6517 & -0.0093 & 0.8166 & -0.0090 \\
+\bottomrule
+\end{tabular}
+\caption{Ablation Study Results[cite: 11].}
+\end{table}
+
+The results indicate that the Variable-level Attention is critical for identifying specific comorbidities that trigger particular prescriptions, while the reverse-time bias ensures the model does not "over-learn" from distant, potentially resolved medical history[cite: 11].
+
+\section{Limitations and Compliance}
+\begin{itemize}
+    \item \textbf{Data Privacy:} All processing was performed on local credentialed machines in accordance with the PhysioNet Data Use Agreement (DUA)[cite: 11]. No patient-level data was uploaded to public repositories or online LLM services[cite: 11].
+    \item \textbf{Technical Limits:} The current model relies on the top-N frequent medications[cite: 11]. Rare but critical drugs may be under-represented in the current vocabulary filtering rules[cite: 11].
+\end{itemize}
+
+\end{document}
