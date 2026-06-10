@@ -151,7 +151,7 @@ To reproduce this project, users must request access through PhysioNet and compl
 * PyHealth: https://pyhealth.readthedocs.io/
 * PubMedBERT: https://huggingface.co/microsoft/BiomedNLP-PubMedBERT-base-uncased-abstract
 
-This project was developed as part of a team-based health prediction project at the University of Kansas, with contributions from Lia and collaborators.
+This project was developed as part of a team-based health prediction project at the University of Kansas, with contributions from Ilia and collaborators.
 
 ## Project Status
 
